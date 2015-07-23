@@ -23,17 +23,12 @@ Last, simply add a `<modal-directive>` element.
 ```html
 <header-directive>
     <main-header>
-        <button>Menu</button>
-        <header-title>
-            This is a super long title to see what that's like.
-        </header-title>
-        <button>Username</button>
+        <header-title>[Your Title Here]</header-title>
     </main-header>
     <sub-navigation>
-        <navigation-tab class="selected">Tab 01</navigation-tab>
-        <navigation-tab>Tab 02</navigation-tab>
-        <navigation-tab>Tab 03</navigation-tab>
-        <navigation-tab>Tab 04</navigation-tab>
+        <navigation-tab class="selected">Tab 1</navigation-tab>
+        <navigation-tab>Tab 2</navigation-tab>
+        <navigation-tab>Tab 3</navigation-tab>
     </sub-navigation>
 </header-directive>
 ```
