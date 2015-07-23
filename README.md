@@ -19,7 +19,7 @@ In your app's directives.js file, add the headerDirective module.
 angular.module('myApp', ['headerDirective']);
 ```
 
-Last, simply add a `<modal-directive>` element.
+Last, simply add a `<header-directive>` element.
 ```html
 <header-directive>
     <main-header>
