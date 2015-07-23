@@ -90,21 +90,23 @@ angular.module('headerDirective', ['styleSheetFactory'])
             var oldScroll = 0;
 
             var scrollHander = function(event) {
-                if(document.body.scrollTop <= 104) {
-                    $element.removeClass('animate');
-                    $element.attr('style', 'top: -'+document.body.scrollTop+'px;');
-                } else if(document.body.scrollTop < oldScroll) {
-                    $element.attr('style', 'top: -56px;');
-                } else {
-                    $element.attr('style', 'top: -104px;');
+                var top = document.body.scrollTop;
+                var height = document.body.scrollHeight;
 
+                if(top <= 56) {
+                    $element.removeClass('animate');
+                    $element.attr('style', 'top: -'+top+'px;');
+                } else if((top / height) <= .2 || top < oldScroll) {
+                    $element.attr('style', 'top: -56px;');
                     // Timeout corrects animation glitch
                     $timeout(function() {
                         $element.addClass('animate');
                     }, 0);
+                } else {
+                    $element.attr('style', 'top: -104px;');
                 }
 
-                oldScroll = document.body.scrollTop;
+                oldScroll = top;
             };
 
             var tabHandler = function(event) {
