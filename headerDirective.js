@@ -105,7 +105,7 @@ angular.module('headerDirective', ['styleSheetFactory'])
                     $element.attr('style', 'top: -'+top+'px;');
                 } else if(top <= 200 || oldScroll - top > 8) {
                     $element.attr('style', 'top: -56px;');
-                } else if(!scrollUp) {
+                } else if(!scrollUp && top - oldScroll > 8) {
                     $element.attr('style', 'top: -104px;');
                 }
 
