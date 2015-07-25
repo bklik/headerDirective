@@ -91,7 +91,7 @@ angular.module('headerDirective', ['styleSheetFactory'])
             var scrollUp = false;
 
             var scrollHander = function(event) {
-                var top = document.body.scrollTop;
+                var top = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
                 var height = document.body.scrollHeight;
 
                 scrollUp = (top < oldScroll) ? true : false;
@@ -103,9 +103,9 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 if(top <= 56) {
                     $element.removeClass('animate');
                     $element.attr('style', 'top: -'+top+'px;');
-                } else if(top <= 200 || oldScroll - top > 8) {
+                } else if(top <= 200 || oldScroll - top > 7) {
                     $element.attr('style', 'top: -56px;');
-                } else if(!scrollUp && top - oldScroll > 8) {
+                } else if(!scrollUp && top - oldScroll > 7) {
                     $element.attr('style', 'top: -104px;');
                 }
 
