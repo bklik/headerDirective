@@ -88,21 +88,24 @@ angular.module('headerDirective', ['styleSheetFactory'])
             ,1);
 
             var oldScroll = 0;
+            var scrollUp = false;
 
             var scrollHander = function(event) {
                 var top = document.body.scrollTop;
                 var height = document.body.scrollHeight;
 
+                scrollUp = (top < oldScroll) ? true : false;
+
+                if(!scrollUp) {
+                    $element.addClass('animate');
+                }
+
                 if(top <= 56) {
                     $element.removeClass('animate');
                     $element.attr('style', 'top: -'+top+'px;');
-                } else if((top / height) <= .2 || top < oldScroll) {
+                } else if(top <= 200 || oldScroll - top > 8) {
                     $element.attr('style', 'top: -56px;');
-                    // Timeout corrects animation glitch
-                    $timeout(function() {
-                        $element.addClass('animate');
-                    }, 0);
-                } else {
+                } else if(!scrollUp) {
                     $element.attr('style', 'top: -104px;');
                 }
 
