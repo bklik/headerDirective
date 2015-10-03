@@ -26,9 +26,9 @@ Last, simply add a `<header-directive>` element.
         <header-title>[Your Title Here]</header-title>
     </main-header>
     <sub-navigation>
-        <navigation-tab class="selected">Tab 1</navigation-tab>
-        <navigation-tab>Tab 2</navigation-tab>
-        <navigation-tab>Tab 3</navigation-tab>
+        <button class="selected">Tab 1</button>
+        <button>Tab 2</button>
+        <button>Tab 3</button>
     </sub-navigation>
 </header-directive>
 ```
