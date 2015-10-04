@@ -32,3 +32,30 @@ Last, simply add a `<header-directive>` element.
     </sub-navigation>
 </header-directive>
 ```
+
+If you'd like to custome style the header, use the following SCSS template.
+'''scss
+$header-color: #2563D9;
+
+header-directive {
+    background-color: $header-color;
+
+    main-header {
+        background-color: transparent;
+
+        header-title {
+            font-size: 24px;
+        }
+    }
+    sub-navigation {
+        background-color: darken($header-color, 10%);
+
+        &:after {}
+        &.show:after {}
+
+        button {
+            &.selected {}
+        }
+    }
+}
+'''

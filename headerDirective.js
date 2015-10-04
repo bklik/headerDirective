@@ -70,8 +70,28 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'display: block;' +
                 'height: 48px;' +
                 'overflow: hidden;' +
+                'position: relative;' +
                 '-'+prefix+'-transition: all ease 250ms;' +
                 'transition: all ease 250ms;'
+            ,1);
+
+            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation:after',
+                'content: \'\\25be\';' +
+                'display: none;' +
+                'line-height: 48px;' +
+                'text-align: center;' +
+                '-'+prefix+'-transition: all ease 250ms;' +
+                'transition: all ease 250ms;' +
+                'position: absolute;' +
+                'top: 0;' +
+                'right: 0;' +
+                'height: 48px;' +
+                'width: 48px;'
+            ,1);
+
+            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation.show:after',
+                '-'+prefix+'-transform: rotate(180deg);' +
+                'transform: rotate(180deg);'
             ,1);
 
             styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation button',
@@ -189,6 +209,9 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 }
                 
                 styleSheetFactory.addCSSRule(styleSheet, '@media screen and (max-width: '+subNavWidth+'px)',
+                    'header-directive sub-navigation:after {' +
+                        'display: block !important;' +
+                    '}' +
                     'header-directive sub-navigation button {' +
                         'border-bottom-width: 0 !important;' +
                         'float: auto;' +
