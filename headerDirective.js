@@ -26,6 +26,7 @@ angular.module('headerDirective', ['styleSheetFactory'])
 
             // Add this directive's styles to the document's stylesheet.
             styleSheetFactory.addCSSRule(styleSheet, 'header-directive',
+                'background-color: black;' +
                 'display: block;' +
                 'overflow: hidden;' +
                 'position: fixed;' +
@@ -40,7 +41,6 @@ angular.module('headerDirective', ['styleSheetFactory'])
             ,1);
 
             styleSheetFactory.addCSSRule(styleSheet, 'header-directive main-header',
-                'background-color: black;' +
                 'color: white;' +
                 'display: block;' +
                 'height: 56px;' +
@@ -48,7 +48,7 @@ angular.module('headerDirective', ['styleSheetFactory'])
             ,1);
 
             styleSheetFactory.addCSSRule(styleSheet, 'header-directive main-header header-title',
-                'flex-grow: 1;' +
+                'display: block;' +
                 'line-height: 56px;' +
                 'overflow: hidden;' +
                 'padding: 0 16px;' +
@@ -103,8 +103,8 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'overflow: hidden;' +
                 'padding: 0 16px;' +
                 'text-overflow: ellipsis;' +
-                '-'+prefix+'-transition: all ease 250ms;' +
-                'transition: all ease 250ms;' +
+                '-'+prefix+'-transition: border-bottom-width ease 250ms;' +
+                'transition: border-bottom-width ease 250ms;' +
                 'white-space: nowrap;'
             ,1);
 
