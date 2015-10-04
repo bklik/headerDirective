@@ -34,7 +34,7 @@ Last, simply add a `<header-directive>` element.
 ```
 
 If you'd like to custome style the header, use the following SCSS template.
-'''scss
+```scss
 $header-color: #2563D9;
 
 header-directive {
@@ -58,4 +58,4 @@ header-directive {
         }
     }
 }
-'''
+```
