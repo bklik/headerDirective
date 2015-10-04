@@ -33,7 +33,7 @@ Last, simply add a `<header-directive>` element.
 </header-directive>
 ```
 
-If you'd like to custome style the header, use the following SCSS template.
+If you'd like to customize the header style, use the following SCSS template:
 ```scss
 $header-color: #2563D9;
 
