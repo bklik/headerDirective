@@ -18,9 +18,6 @@ angular.module('headerDirective', ['styleSheetFactory'])
         },
         restrict: 'E',
         link: function($scope, $element, $attrs) {
-            var headerHeight = 104;     // Total height of the header
-            var navHeight = 48;         // Height of navigation in header
-
             // The document's stylesheet.
             var styleSheet = styleSheetFactory.getStyleSheet();
 
@@ -32,8 +29,7 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'background-color: black;' +
                 'color: white;' +
                 'display: block;' +
-                'height: 104px;' +
-                'overflow: visible;' +
+                'overflow: hidden;' +
                 'position: fixed;' +
                 'top: 0;' +
                 'right: 0;' +
@@ -51,12 +47,9 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'display: block;' +
                 'height: 48px;' +
                 'overflow: hidden;' +
+                'position: relative;' +
                 '-'+prefix+'-transition: all ease 250ms;' +
-                'transition: all ease 250ms;' +
-                'position: absolute;' +
-                'top: '+(headerHeight - navHeight)+'px;' +
-                'right: 0;' +
-                'left: 0;'
+                'transition: all ease 250ms;'
             ,1);
 
             styleSheetFactory.addCSSRule(styleSheet, 'header nav:after',
@@ -116,6 +109,8 @@ angular.module('headerDirective', ['styleSheetFactory'])
              * If the user is scrolling down, faster than the tolerance, hide
              * the header.
             /**********************************************************************/
+            var headerHeight = null;
+            var navHeight = null;
             var oldScroll = 0;
             var scrolltolerance = 7;
             var scrollUp = false;
@@ -134,9 +129,9 @@ angular.module('headerDirective', ['styleSheetFactory'])
                     $element.removeClass('animate');
                     $element.attr('style', 'top: -'+top+'px;');
                 } else if(top <= 200 || oldScroll - top > scrolltolerance) {
-                    $element.attr('style', 'top: -56px;');
+                    $element.attr('style', 'top: -'+(headerHeight - navHeight)+'px;');
                 } else if(!scrollUp && top - oldScroll > scrolltolerance) {
-                    $element.attr('style', 'top: -104px;');
+                    $element.attr('style', 'top: -'+headerHeight+'px;');
                 }
 
                 oldScroll = top;
@@ -227,8 +222,15 @@ angular.module('headerDirective', ['styleSheetFactory'])
              * Initialize the component with it has been fully drawn to the DOM.
             /**********************************************************************/
             var init = function() {
+                // Configure responsive nav classes
                 nav = $element.find('nav');
                 configureResponsiveNav();
+
+                // Calculate heights
+                headerHeight = $element[0].clientHeight;
+                navHeight = nav[0].clientHeight;
+
+                // Add events
                 $element.find('button').bind('click', tabHandler);
                 window.addEventListener('scroll', scrollHander, true);
                 window.addEventListener('resize', resizeHandler, true);
