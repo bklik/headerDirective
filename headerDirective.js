@@ -11,13 +11,16 @@
 /**********************************************************************/
 angular.module('headerDirective', ['styleSheetFactory'])
 
-.directive('headerDirective', ['$timeout', 'styleSheetFactory', function($timeout, styleSheetFactory) {
+.directive('header', ['$timeout', 'styleSheetFactory', function($timeout, styleSheetFactory) {
     return {
         scope: {
             api: '=',
         },
         restrict: 'E',
         link: function($scope, $element, $attrs) {
+            var headerHeight = 104;     // Total height of the header
+            var navHeight = 48;         // Height of navigation in header
+
             // The document's stylesheet.
             var styleSheet = styleSheetFactory.getStyleSheet();
 
@@ -25,57 +28,38 @@ angular.module('headerDirective', ['styleSheetFactory'])
             var prefix = styleSheetFactory.getPrefix();
 
             // Add this directive's styles to the document's stylesheet.
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive',
+            styleSheetFactory.addCSSRule(styleSheet, 'header',
                 'background-color: black;' +
+                'color: white;' +
                 'display: block;' +
-                'overflow: hidden;' +
+                'height: 104px;' +
+                'overflow: visible;' +
                 'position: fixed;' +
                 'top: 0;' +
                 'right: 0;' +
                 'left: 0;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive.animate',
+            styleSheetFactory.addCSSRule(styleSheet, 'header.animate',
                 'box-shadow: 0 2px 8px rgba(0, 0, 0, .25);' +
                 'transition: top ease 250ms;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive main-header',
-                'color: white;' +
-                'display: block;' +
-                'height: 56px;' +
-                'text-align: center;'
-            ,1);
-
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive main-header header-title',
-                'display: block;' +
-                'line-height: 56px;' +
-                'overflow: hidden;' +
-                'padding: 0 16px;' +
-                'text-align: center;' +
-                'text-overflow: ellipsis;' +
-                'white-space: nowrap;'
-            ,1);
-
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive main-header header-title center',
-                'position: absolute;' +
-                'top: 0;' +
-                'right: 0;' +
-                'left: 0;'
-            ,1);
-
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav',
                 'background-color: grey;' +
                 'color: white;' +
                 'display: block;' +
                 'height: 48px;' +
                 'overflow: hidden;' +
-                'position: relative;' +
                 '-'+prefix+'-transition: all ease 250ms;' +
-                'transition: all ease 250ms;'
+                'transition: all ease 250ms;' +
+                'position: absolute;' +
+                'top: '+(headerHeight - navHeight)+'px;' +
+                'right: 0;' +
+                'left: 0;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation:after',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav:after',
                 'content: \'\\25be\';' +
                 'display: none;' +
                 'line-height: 48px;' +
@@ -89,12 +73,12 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'width: 48px;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation.show:after',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav.show:after',
                 '-'+prefix+'-transform: rotate(180deg);' +
                 'transform: rotate(180deg);'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation button',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav button',
                 'border-bottom: 0px solid white;' +
                 'cursor: pointer;' +
                 'display: block;' +
@@ -108,12 +92,12 @@ angular.module('headerDirective', ['styleSheetFactory'])
                 'white-space: nowrap;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation button.selected',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav button.selected',
                 'border-bottom-width: 4px;' +
                 'max-height: 48px !important;'
             ,1);
 
-            styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation.show button',
+            styleSheetFactory.addCSSRule(styleSheet, 'header nav.show button',
                 'max-height: 48px !important;'
             ,1);
 
@@ -172,8 +156,8 @@ angular.module('headerDirective', ['styleSheetFactory'])
              * sub navigation buttons. Otherwise, cause a selection, and hide the
              * sub navigation (if applicable).
             /**********************************************************************/
-            var subNav = null;
-            var subMQ = null;
+            var nav = null;
+            var responsiveMQ = null;
 
             var tabHandler = function(event) {
                 $element.find('button').removeClass('selected');
@@ -183,16 +167,22 @@ angular.module('headerDirective', ['styleSheetFactory'])
                     parent = parent.parentNode;
                 }
 
-                if(subMQ.matches && !subNav.hasClass('show')) {
-                    subNav.addClass('show');
+                if(responsiveMQ.matches && !nav.hasClass('show')) {
+                    nav.addClass('show');
                 } else {
-                    subNav.removeClass('show');
-                    parent.classList.add('selected');
+                    nav.removeClass('show');
+                    window.scrollTo(0, 0);
                 }
+
+                parent.classList.add('selected');
             };
 
+            var resizeHandler = function(event) {
+                nav.removeClass('show');
+            }
+
             /***********************************************************************
-             * Function: configureResponsiveSubNavigation
+             * Function: configureResponsiveNav
              * 
              * Description:
              * Detect the width of all the buttons in sub navigation.
@@ -201,18 +191,20 @@ angular.module('headerDirective', ['styleSheetFactory'])
              * 
              * Add a Javascript media query of the same responsive rule.
             /**********************************************************************/
-            var configureResponsiveSubNavigation = function() {
-                var subNavWidth = 0;
+            var configureResponsiveNav = function() {
+                var scrollbarOffset = 17;
+                var navWidth = 0;
                 var buttons = $element.find('button');
+
                 for(var i=0; i<buttons.length; i++) {
-                    subNavWidth += buttons[i].clientWidth;
+                    navWidth += buttons[i].clientWidth;
                 }
                 
-                styleSheetFactory.addCSSRule(styleSheet, '@media screen and (max-width: '+subNavWidth+'px)',
-                    'header-directive sub-navigation:after {' +
+                styleSheetFactory.addCSSRule(styleSheet, '@media screen and (max-width: '+(navWidth + scrollbarOffset)+'px)',
+                    'header nav:after {' +
                         'display: block !important;' +
                     '}' +
-                    'header-directive sub-navigation button {' +
+                    'header nav button {' +
                         'border-bottom-width: 0 !important;' +
                         'float: auto;' +
                         'max-height: 0;' +
@@ -221,11 +213,11 @@ angular.module('headerDirective', ['styleSheetFactory'])
                     '}'
                 ,1);
 
-                styleSheetFactory.addCSSRule(styleSheet, 'header-directive sub-navigation.show',
+                styleSheetFactory.addCSSRule(styleSheet, 'header nav.show',
                     'height: '+(48 * buttons.length)+'px;'
                 ,1);
 
-                subMQ = window.matchMedia('(max-width: '+subNavWidth+'px)');
+                responsiveMQ = window.matchMedia('(max-width: '+(navWidth + scrollbarOffset)+'px)');
             };
 
             /***********************************************************************
@@ -235,10 +227,11 @@ angular.module('headerDirective', ['styleSheetFactory'])
              * Initialize the component with it has been fully drawn to the DOM.
             /**********************************************************************/
             var init = function() {
-                subNav = $element.find('sub-navigation');
-                configureResponsiveSubNavigation();
+                nav = $element.find('nav');
+                configureResponsiveNav();
                 $element.find('button').bind('click', tabHandler);
-                window.addEventListener('scroll', scrollHander);
+                window.addEventListener('scroll', scrollHander, true);
+                window.addEventListener('resize', resizeHandler, true);
                 scrollHander(null);
             };
             $timeout(init, 0);

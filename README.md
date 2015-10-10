@@ -19,35 +19,25 @@ In your app's directives.js file, add the headerDirective module.
 angular.module('myApp', ['headerDirective']);
 ```
 
-Last, simply add a `<header-directive>` element.
+Last, simply add a `<header>` element.
 ```html
-<header-directive>
-    <main-header>
-        <header-title>[Your Title Here]</header-title>
-    </main-header>
-    <sub-navigation>
+<header>
+    <nav>
         <button class="selected">Tab 1</button>
         <button>Tab 2</button>
         <button>Tab 3</button>
-    </sub-navigation>
-</header-directive>
+    </nav>
+</header>
 ```
 
 If you'd like to customize the header style, use the following SCSS template:
 ```scss
 $header-color: #2563D9;
 
-header-directive {
+header {
     background-color: $header-color;
 
-    main-header {
-        background-color: transparent;
-
-        header-title {
-            font-size: 24px;
-        }
-    }
-    sub-navigation {
+    nav {
         background-color: darken($header-color, 10%);
 
         &:after {}
