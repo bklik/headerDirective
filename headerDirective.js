@@ -166,6 +166,8 @@ angular.module('headerDirective', ['styleSheetFactory'])
 
                 if(responsiveMQ.matches && !nav.hasClass('show')) {
                     nav.addClass('show');
+
+                    // Delay the window click event to prevent imemdiate closure 
                     $timeout(function() {
                         window.addEventListener('click', closeSelect, false);
                     },100);
