@@ -125,13 +125,15 @@ angular.module('headerDirective', ['styleSheetFactory'])
                     $element.addClass('animate');
                 }
 
-                if(top <= 56) {
-                    $element.removeClass('animate');
-                    $element.attr('style', 'top: -'+top+'px;');
-                } else if(top <= 200 || oldScroll - top > scrolltolerance) {
-                    $element.attr('style', 'top: -'+(headerHeight - navHeight)+'px;');
-                } else if(!scrollUp && top - oldScroll > scrolltolerance) {
-                    $element.attr('style', 'top: -'+headerHeight+'px;');
+                if(!nav.hasClass('show')) {
+                    if(top <= 56) {
+                        $element.removeClass('animate');
+                        $element.attr('style', 'top: -'+top+'px;');
+                    } else if(top <= 200 || oldScroll - top > scrolltolerance) {
+                        $element.attr('style', 'top: -'+(headerHeight - navHeight)+'px;');
+                    } else if(!scrollUp && top - oldScroll > scrolltolerance) {
+                        $element.attr('style', 'top: -'+headerHeight+'px;');
+                    }
                 }
 
                 oldScroll = top;
@@ -164,16 +166,27 @@ angular.module('headerDirective', ['styleSheetFactory'])
 
                 if(responsiveMQ.matches && !nav.hasClass('show')) {
                     nav.addClass('show');
+                    $timeout(function() {
+                        window.addEventListener('click', closeSelect, false);
+                    },100);
                 } else {
-                    nav.removeClass('show');
                     window.scrollTo(0, 0);
                 }
 
                 parent.classList.add('selected');
             };
 
+            // Allows the responsive nav to be dismissed
+            var closeSelect = function() {
+                if(nav.hasClass('show')) {
+                    nav.removeClass('show');
+                }
+                window.removeEventListener('click', closeSelect, false);
+            }
+
             var resizeHandler = function(event) {
                 nav.removeClass('show');
+                window.removeEventListener('click', closeSelect, false);
             }
 
             /***********************************************************************
@@ -205,6 +218,9 @@ angular.module('headerDirective', ['styleSheetFactory'])
                         'max-height: 0;' +
                         'text-align: left;' +
                         'width: 100%;' +
+                    '}' +
+                    'header nav button.selected {' +
+                        'background-color: rgba(0,0,0,.1);' +
                     '}'
                 ,1);
 
